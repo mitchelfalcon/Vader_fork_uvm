@@ -1,5 +1,6 @@
 # Vader_fork_uvm
 Gestión de Procesos en Linux: Bifurcación y Concurrencia en C (Star Wars Edition)
+
 🌌 Gestión de Procesos en Linux: Bifurcación y Concurrencia en C (Star Wars Edition)
 
 ¡Bienvenido! Este repositorio es un proyecto educativo diseñado para entender empíricamente cómo el núcleo (kernel) de Linux gestiona la creación de procesos, la memoria virtual y la sincronización, utilizando el lenguaje C y la API estándar POSIX.
