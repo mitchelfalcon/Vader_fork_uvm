@@ -12,30 +12,46 @@ Para compilar código C que invoca primitivas POSIX como `fork()`, necesitas un 
 
 ### Paso 1: Instalar Ubuntu
 Abre **PowerShell como Administrador** en tu Windows y ejecuta:
+
 ```bash
 wsl --install -d Ubuntu
+
+```
 ¿Por qué? Windows no entiende la función fork() nativamente. Este comando descarga el Kernel real de Linux y el sistema de archivos de Ubuntu dentro de tu Windows, permitiéndote ejecutar herramientas de bajo nivel.
 
 (Nota: Reinicia tu equipo si te lo solicita y configura tu usuario/contraseña).
 
-Paso 2: Aprovisionar Herramientas
+---
+
+## Paso 2: Aprovisionar Herramientas
 Una vez dentro de la terminal de Ubuntu, actualiza los repositorios e instala las herramientas de compilación:
 
+```
 Bash
 sudo apt update
 sudo apt install gcc make -y
+```
 ¿Para qué? gcc es la Colección de Compiladores de GNU, el traductor que convertirá tu texto en C a un binario que el procesador entienda. make es una herramienta de orquestación que automatiza la compilación para no escribir comandos largos manualmente.
 
-Paso 3: Clonar este Repositorio
+---
+
+## Paso 3: Clonar este Repositorio
+---
+```
 Bash
 git clone [https://github.com/mitchelfalcon/Vader_fork_uvm/](https://github.com/mitchelfalcon/Vader_fork_uvm/)
 cd Vader_fork_uvm
-👨‍💻 Fase 2: Creación de los Archivos de Código
+```
+## 👨‍💻 Fase 2: Creación de los Archivos de Código
 Si no clonaste el repo y quieres crear los archivos tú mismo, haz lo siguiente:
 
-1. El Proceso Básico (vader_fork.c)
+---
+
+## 1. El Proceso Básico (vader_fork.c)
 Escribe nano vader_fork.c, pega el código y guarda (Ctrl+O, Enter, Ctrl+X):
 
+---
+```
 C
 #include 
 #include 
@@ -71,9 +87,12 @@ int main() {
     }
     return 0;
 }
-2. El Crecimiento Exponencial (vader_loop.c)
-Escribe nano vader_loop.c, pega y guarda:
 
+```
+## 2. El Crecimiento Exponencial (vader_loop.c)
+Escribe nano vader_loop.c, pega y guarda:
+---
+```
 C
 #include 
 #include 
@@ -95,9 +114,12 @@ int main(int argc, char *argv[]) {
     while (wait(NULL) > 0); 
     return 0;
 }
-3. El Orquestador (Makefile)
+```
+## 3. El Orquestador (Makefile)
 Escribe nano Makefile, pega y guarda. (Asegúrate de que la línea de gcc comience con un TAB, no con espacios):
 
+----
+```
 Makefile
 TARGETS=vader_fork vader_loop
 CC_C = gcc
@@ -110,30 +132,51 @@ $(TARGETS):
 
 clean:
 	rm -f $(TARGETS)
-¿Por qué un Makefile? Compilar con gcc archivo.c -o archivo está bien, pero en proyectos serios, el Makefile aplica reglas estrictas (-Wall muestra todas las advertencias, -Werror las convierte en errores bloqueantes), garantizando que tu código es seguro antes de ejecutarse.
+```
+---
+## ¿Por qué un Makefile? 
+---
+Compilar con gcc archivo.c -o archivo está bien, pero en proyectos serios, el Makefile aplica reglas estrictas (-Wall muestra todas las advertencias, 
+-Werror las convierte en errores bloqueantes), garantizando que tu código es seguro antes de ejecutarse.
+---
 
-🚀 Fase 3: Compilación y Ejecución (El Análisis)
+## 🚀 Fase 3: Compilación y Ejecución (El Análisis)
 Compilación Automatizada
-En tu terminal, simplemente escribe:
 
+En tu terminal, simplemente escribe:
+---
+
+```
 Bash
 make
+```
 El sistema leerá el Makefile, borrará binarios antiguos y compilará limpiamente vader_fork y vader_loop.
 
 Ejecutar Ejercicio 1 (La Anatomía)
+---
+```
 Bash
 ./vader_fork
-¿Qué sucede y por qué?
+```
+## ¿Qué sucede y por qué?
+
 Al invocar fork(), la memoria se divide. El sistema operativo devuelve 0 al proceso hijo, obligándolo a entrar al bloque else if. Al proceso padre le devuelve un número (ej. 4091), obligándolo a entrar al bloque else.  El padre ejecuta wait(&status), que lo congela. Esto es crítico: si el padre no espera y termina, el hijo queda como Huérfano. Si el hijo termina y el padre nunca lee su muerte, se vuelve un Zombie (ocupa espacio en el SO sin hacer nada).
 
-Ejecutar Ejercicio 2 (La Bomba Lógica)
+---
+
+## Ejecutar Ejercicio 2 (La Bomba Lógica)
+---
+```
 Bash
 ./vader_loop
-¿Qué sucede y por qué?
-Verás tu consola inundarse de mensajes. Un bucle for de 4 iteraciones no crea 4 procesos. Al estar el fork() dentro, el primer proceso se clona (2), luego esos 2 se clonan (4), luego 8, y finalmente 16 procesos concurrentes. Esto se conoce matemáticamente como 2 
-n
- . Hemos añadido un while(wait(NULL) > 0); al final para obligar al sistema a limpiar masivamente todos los clones generados, protegiendo tu procesador de un desbordamiento.
+```
+## ¿Qué sucede y por qué?
+Verás tu consola inundarse de mensajes. Un bucle for de 4 iteraciones no crea 4 procesos. Al estar el fork() dentro, el primer proceso se clona (2), luego esos 2 se clonan (4), luego 8, y finalmente 16 procesos concurrentes. 
+Esto se conoce matemáticamente como 2 n
+Hemos añadido un while(wait(NULL) > 0); al final para obligar al sistema a limpiar masivamente todos los clones generados, protegiendo tu procesador de un desbordamiento.
 
-Creado con ❤️ para que estudiantes de programación aprendan.
+---
 
-Universidad del Valle de México | Sistemas Operativos > Actividad 2. Ejercicios | Mtra. Judith Jiménez García
+## Creado con ❤️ para que estudiantes de programación aprendan.
+
+## Universidad del Valle de México | Sistemas Operativos > Actividad 2. Ejercicios | Mtra. Judith Jiménez García
