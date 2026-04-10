@@ -1,0 +1,23 @@
+# Makefile for building Star Wars OS demo applications.
+# Adapted for academic Linux Process Management evaluation.
+
+# Targets (ejecutables a construir)
+TARGETS=vader_fork vader_loop
+
+CROSS_TOOL = 
+CC_CPP = $(CROSS_TOOL)g++
+CC_C = $(CROSS_TOOL)gcc
+
+# Banderas de compilación: Mostrar todos los warnings (-Wall), 
+# usar estándar C99 (-std=c99), e incluir símbolos de depuración (-g).
+CFLAGS = -Wall -g -std=c99 -Werror
+
+all: clean $(TARGETS)
+
+# Regla de compilación genérica
+$(TARGETS):
+	$(CC_C) $(CFLAGS) $@.c -o $@
+
+# Limpieza de binarios antiguos
+clean:
+	rm -f $(TARGETS)
